@@ -15,13 +15,15 @@ def render_content(text):
     if not text:
         return ""
     def replace_img(m):
-        url = m.group(1)
+        alt = m.group(1).strip()
+        url = m.group(2)
         if "wp-content/uploads" in url:
-            return '<img src="' + url + '" style="max-width:100%;height:auto;margin:12px 0;display:block;border-radius:2px;">'
+            result = '<img src="' + url + '" style="max-width:100%;height:auto;margin:12px 0;display:block;border-radius:2px;">'
+            if alt and alt not in ["", "Image"] and not alt.startswith("Image "):
+                result += '<p style="font-size:12px;color:#888780;font-family:Arial,sans-serif;margin:4px 0 12px;">' + alt + '</p>'
+            return result
         return ""
-    # 先處理圖片
-    text = re.sub(r'!\[.*?\]\((https?://[^\)]+)\)', replace_img, text)
-    # 清掉殘留的圖片說明（沒有配對到網址的 ![...] 格式）
+    text = re.sub(r'!\[([^\]]*)\]\((https?://[^\)]+)\)', replace_img, text)
     text = re.sub(r'!\[.*?\]', '', text)
     text = text.replace("\n", "<br>")
     return text
@@ -30,21 +32,31 @@ def render_content(text):
 def make_card(i, art):
     url         = art.get("url", "#")
     title       = art.get("title", "（無標題）")
-    summary     = art.get("summary", "")
-    commentary  = art.get("commentary", "")
     translation = art.get("translation", "")
     meta        = art.get("author", "") or "Axis"
     if art.get("published"):
         meta += "　·　" + art["published"]
 
-    translation_block = ""
-    if translation:
-        translation_block = (
+    return (
+        '<div class="card">'
+        '<div class="card-header">'
+        '<p class="kicker">文章 ' + f"{i:02d}" + '</p>'
+        '<h2 class="card-title"><a href="' + url + '">' + title + '</a></h2>'
+        '<p class="card-meta">' + meta + '</p>'
+        '</div>'
+        + (
             '<div class="section">'
             '<p class="label">繁體中文全文</p>'
             '<p class="body-text">' + render_content(translation) + '</p>'
             '</div>'
-        )
+            if translation else
+            '<div class="section"><p class="body-text" style="color:#b4b2a9">翻譯生成中...</p></div>'
+        ) +
+        '<div class="read-more">'
+        '<a href="' + url + '">閱讀原文 →</a>'
+        '</div>'
+        '</div>'
+    )
 
     return (
         '<div class="card">'
