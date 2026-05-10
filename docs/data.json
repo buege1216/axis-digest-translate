@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-05-10 13:09 UTC",
+  "updated_at": "2026-05-10 13:12 UTC",
   "stats": {
     "total_site": 13779,
     "total_db": 10,
     "no_summary": 0,
-    "pending": 10,
-    "sent": 0
+    "pending": 9,
+    "sent": 1
   },
   "articles": [
     {
@@ -116,7 +116,7 @@
       "summary": "翻譯完成",
       "commentary": "",
       "translation": "<think>The user wants me to translate a Japanese article into Traditional Chinese. Let me carefully translate the content while:\n\n1. Keeping all paragraph structures\n2. Translating image captions along with the images\n3. Keeping proper nouns, brand names, and personal names in their original form\n4. Making it natural and fluent, not word-for-word\n5. Output only the translation, no explanations\n\nLet me translate this article about the Flos Maap lamp designed by Erwan Bouroullec.\n</think>\n\n直覺與本能的觸發，形態無限變化——照明 Flos: Maap | AXIS Web | 以設計觀點傳遞人類可能性與創造力的媒體\n\n**「Maap」為設計師艾爾萬・布胡雷克（Erwan Bouroullec）與義大利現代照明品牌 FLOS 共同創作的大型壁面照明灯具。特色在於採用薄型、輕量且耐久性絕佳的 Tyvek 材質，可隨心以手自由塑形。這款產品並非單方面呈現既定的完成形態，而是映照出當代「用戶參與型」價值的作品。**\n\n![Image 13](https://www.axismag.jp/axismag-admin/wp-content/uploads/2026/04/ax236_fea_maap_01.jpg)\n\n「想要創造一個能將光線擴散至寬廣面的巨大光源」——這是艾爾萬・布胡雷克長期以來心中醞釀的構思。經過反覆嘗試與研究，終於在2025年由 FLOS 推出了「Maap」（日本尚未發表，預計年內發表）。關於這款產品，布胡雷克如此說明：「雖然由簡潔的構成組成，其造型卻極為複雜，與當代的極簡形態形成鮮明對比。而 Maap 的光線特色，在於如陽光灑入室內般以面狀擴散。光線柔和而均勻地蔓延，將整個空間包覆其中。」\n\nMaap 共有三種尺寸供選擇，高度均為155公分，最大寬度可達320公分。結構體採用十字形金屬框架，內部配置四個 LED 光源。燈罩素材則選用美國杜邦公司開發的特殊不織布「Tyvek」，具有紙張般的輕薄超輕量特性，同時具備優異的耐久性與強度。\n\n布胡雷克表示，他長期以來對極薄素材的可能性抱持高度興趣。「由於是壁面照明，在設計過程中『輕量化』是重要的指導原則。減輕重量也是我眾多作品共同的設計理念。原本考慮使用紙張，但質地過軟、容易損壞成為課題。\n\n![Image 14: AXIS Media Membershipロゴ](https://www.axismag.jp/axismag-admin/wp-content/uploads/2024/09/AXIS_MM_Logo.png)\n\n#### 本文為 AXIS Media Membership 會員限定文章\n\n使用需事先註冊會員（免費）。註冊後可隨時在線上閱讀最多三篇新文章。\n\n若您訂閱付費方案，不僅可閱讀全數文章，還能以優惠方式參與擴充程式「CONNECT」。\n\n[繼續閱讀](https://membership.axismag.jp/posts/vko6t5s-o)\n\n[艾爾萬・布胡雷克](https://www.axismag.jp/tag/%e3%82%a8%e3%83%ab%e3%83%af%e3%83%b3%e3%83%bb%e3%83%96%e3%83%ab%e3%83%ac%e3%83%83%e3%82%af)\n\n[FLOS](https://www.axismag.jp/tag/%e3%83%95%e3%83%ad%e3%82%b9)\n\n*   ### [連載 ｜ Lighting Edit ![Image 17: 。米蘭家具展 / Euroluce 2017 「持續勇於挑戰的底氣——FLOS」](https://www.axismag.jp/axismag-admin/wp-content/uploads/2017/08/66e091bc2d19932de79e174ad215915d-720x480.jpg) #### 米蘭家具展 / Euroluce 2017 「持續勇於挑戰的底氣——FLOS」](https://www.axismag.jp/posts/2017/08/79069.html)\n\n[![Image 18](https://www.axismag.jp/axismag-admin/wp-content/uploads/2017/11/AMM_bottom.jpg)](https://membership.axismag.jp/)\n\n![Image 27: Web Magazine AXIS](https://www.axismag.jp/axismag-admin/wp-content/themes/axismag_2017/assets/img/img_footer_logo.png)",
-      "sent": 0
+      "sent": 1
     }
   ]
 }
