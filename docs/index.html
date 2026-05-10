@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>軸心週報 Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f5f4f0; font-family: Georgia, serif; color: #2c2c2a; }
+.header { background: #1a1a18; padding: 28px 32px; }
+.header h1 { color: #f1efe8; font-size: 24px; font-weight: 400; }
+.header p { color: #888780; font-size: 13px; margin-top: 4px; font-family: Arial, sans-serif; }
+.stats { display: flex; gap: 12px; padding: 20px 32px; flex-wrap: wrap; background: #2c2c2a; }
+.stat { background: #1a1a18; padding: 14px 20px; border-radius: 4px; flex: 1; min-width: 120px; }
+.stat-num { font-size: 28px; font-weight: 400; color: #f1efe8; }
+.stat-label { font-size: 11px; color: #888780; font-family: Arial, sans-serif; margin-top: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+.controls { padding: 16px 32px; background: #fff; border-bottom: 1px solid #e8e6e0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.filter-btn { padding: 6px 14px; border: 1px solid #d3d1c7; border-radius: 20px; background: #fff; cursor: pointer; font-size: 13px; font-family: Arial, sans-serif; color: #444; }
+.filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.search { padding: 6px 14px; border: 1px solid #d3d1c7; border-radius: 20px; font-size: 13px; font-family: Arial, sans-serif; width: 220px; outline: none; }
+.updated { font-size: 12px; color: #888780; font-family: Arial, sans-serif; margin-left: auto; }
+.list { padding: 16px 32px; max-width: 900px; margin: 0 auto; }
+.article { background: #fff; margin-bottom: 12px; border-radius: 4px; border-left: 3px solid #1a1a18; overflow: hidden; }
+.article.sent { border-left-color: #888780; opacity: 0.7; }
+.article.no-summary { border-left-color: #d3d1c7; }
+.art-header { padding: 16px 20px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; }
+.art-status { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.art-info { flex: 1; }
+.art-title { font-size: 15px; font-weight: 400; color: #1a1a18; line-height: 1.4; }
+.art-meta { font-size: 12px; color: #888780; font-family: Arial, sans-serif; margin-top: 4px; }
+.art-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn { padding: 5px 12px; border-radius: 3px; font-size: 12px; font-family: Arial, sans-serif; cursor: pointer; border: none; }
+.btn-read { background: #1a1a18; color: #fff; }
+.btn-unread { background: #f1efe8; color: #888780; }
+.btn-link { background: transparent; color: #1a1a18; border: 1px solid #d3d1c7; text-decoration: none; display: inline-flex; align-items: center; }
+.art-body { padding: 0 20px 20px; display: none; border-top: 1px solid #f1efe8; }
+.art-body.open { display: block; }
+.section-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #b4b2a9; margin: 16px 0 8px; }
+.section-text { font-size: 14px; line-height: 1.8; color: #444441; white-space: pre-line; }
+.commentary-text { font-size: 14px; line-height: 1.85; color: #2c2c2a; font-style: italic; white-space: pre-line; }
+.badge { display: inline-block; background: #1a1a18; color: #f1efe8; font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 8px; }
+.empty { text-align: center; padding: 48px; color: #888780; font-family: Arial, sans-serif; }
+@media (max-width: 600px) {
+  .stats { padding: 16px; }
+  .list { padding: 12px 16px; }
+  .controls { padding: 12px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>軸心週報 Dashboard</h1>
+  <p id="updated">載入中...</p>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="controls">
+  <button class="filter-btn active" onclick="setFilter('all')">全部</button>
+  <button class="filter-btn" onclick="setFilter('pending')">📥 待閱讀</button>
+  <button class="filter-btn" onclick="setFilter('sent')">✅ 已閱讀</button>
+  <button class="filter-btn" onclick="setFilter('no_summary')">⏳ 待摘要</button>
+  <input class="search" type="text" placeholder="搜尋標題..." oninput="setSearch(this.value)">
+  <span class="updated" id="count"></span>
+</div>
+
+<div class="list" id="list"></div>
+
+<script>
+const REPO = location.hostname.split('.')[0];
+const GH_API = 'https://api.github.com';
+let allArticles = [];
+let currentFilter = 'all';
+let currentSearch = '';
+let ghToken = localStorage.getItem('gh_token') || '';
+
+async function loadData() {
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    const data = await resp.json();
+    allArticles = data.articles || [];
+    renderStats(data.stats, data.updated_at);
+    renderList();
+  } catch(e) {
+    document.getElementById('list').innerHTML = '<div class="empty">載入失敗，請稍後再試</div>';
+  }
+}
+
+function renderStats(s, updated) {
+  document.getElementById('updated').textContent = '更新時間：' + updated;
+  const notCrawled = Math.max((s.total_site || 0) - (s.total_db || 0), 0);
+  document.getElementById('stats').innerHTML =
+    stat('🌐', notCrawled, '未爬取') +
+    stat('⏳', s.no_summary || 0, '待摘要') +
+    stat('📥', s.pending || 0, '待閱讀') +
+    stat('✅', s.sent || 0, '已閱讀');
+}
+
+function stat(icon, num, label) {
+  return '<div class="stat"><div class="stat-num">' + icon + ' ' + num + '</div><div class="stat-label">' + label + '</div></div>';
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['all','pending','sent','no_summary'][i] === f);
+  });
+  renderList();
+}
+
+function setSearch(v) {
+  currentSearch = v.toLowerCase();
+  renderList();
+}
+
+function renderList() {
+  let filtered = allArticles.filter(a => {
+    if (currentFilter === 'pending')    return a.summary && !a.sent;
+    if (currentFilter === 'sent')       return a.sent;
+    if (currentFilter === 'no_summary') return !a.summary;
+    return true;
+  });
+  if (currentSearch) {
+    filtered = filtered.filter(a => (a.title || '').toLowerCase().includes(currentSearch));
+  }
+  document.getElementById('count').textContent = filtered.length + ' 篇';
+  if (!filtered.length) {
+    document.getElementById('list').innerHTML = '<div class="empty">沒有符合的文章</div>';
+    return;
+  }
+  document.getElementById('list').innerHTML = filtered.map(articleHTML).join('');
+}
+
+function articleHTML(a) {
+  const icon = a.sent ? '✅' : (a.summary ? '📥' : '⏳');
+  const cls  = a.sent ? 'sent' : (!a.summary ? 'no-summary' : '');
+  const readBtn = a.sent
+    ? '<button class="btn btn-unread" onclick="markRead(' + a.id + ', 0, event)">取消已讀</button>'
+    : (a.summary ? '<button class="btn btn-read" onclick="markRead(' + a.id + ', 1, event)">標記已讀</button>' : '');
+
+  const body = a.summary ? (
+    '<div class="section-label">編輯摘要</div>' +
+    '<div class="section-text">' + esc(a.summary) + '</div>' +
+    '<div class="section-label" style="margin-top:16px"><span class="badge">軸心評論</span></div>' +
+    '<div class="commentary-text">' + esc(a.commentary) + '</div>' +
+    (a.translation ? '<div class="section-label" style="margin-top:16px">繁體中文全文</div><div class="section-text">' + esc(a.translation) + '</div>' : '')
+  ) : '<div class="section-text" style="color:#b4b2a9;padding-top:16px">摘要尚未生成</div>';
+
+  return '<div class="article ' + cls + '" id="art-' + a.id + '">' +
+    '<div class="art-header" onclick="toggle(' + a.id + ')">' +
+      '<div class="art-status">' + icon + '</div>' +
+      '<div class="art-info">' +
+        '<div class="art-title">' + esc(a.title || '（無標題）') + '</div>' +
+        '<div class="art-meta">' + (a.published || '') + (a.category ? '　·　' + a.category : '') + '</div>' +
+      '</div>' +
+      '<div class="art-actions" onclick="event.stopPropagation()">' +
+        readBtn +
+        '<a class="btn btn-link" href="' + a.url + '" target="_blank">原文</a>' +
+      '</div>' +
+    '</div>' +
+    '<div class="art-body" id="body-' + a.id + '">' + body + '</div>' +
+  '</div>';
+}
+
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggle(id) {
+  const el = document.getElementById('body-' + id);
+  el.classList.toggle('open');
+}
+
+async function markRead(id, val, e) {
+  e.stopPropagation();
+  if (!ghToken) {
+    ghToken = prompt('請輸入 GitHub Personal Access Token（只需輸入一次）：');
+    if (!ghToken) return;
+    localStorage.setItem('gh_token', ghToken);
+  }
+
+  const art = allArticles.find(a => a.id === id);
+  if (!art) return;
+  art.sent = val;
+
+  // 更新本地顯示
+  const el = document.getElementById('art-' + id);
+  if (el) el.outerHTML = articleHTML(art);
+
+  // 觸發 GitHub Actions 更新資料庫
+  try {
+    await fetch(GH_API + '/repos/' + REPO + '/' + REPO.replace(location.hostname.split('.')[0], 'axis-digest') + '/dispatches', {
+      method: 'POST',
+      headers: { 'Authorization': 'token ' + ghToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event_type: 'mark_read', client_payload: { id: id, val: val } })
+    });
+  } catch(e) {
+    console.log('觸發失敗，下次執行時會同步');
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
