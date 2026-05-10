@@ -1,0 +1,90 @@
+name: 軸心週報 Axis Digest
+
+on:
+  schedule:
+    - cron: '0 1 * * *'    # 每天台北時間 09:00 自動處理（爬蟲+摘要）
+    - cron: '0 0 * * 0'    # 每週日台北時間 08:00 自動寄信
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '執行模式'
+        required: true
+        default: 'process'
+        type: choice
+        options:
+          - process
+          - send
+          - pages
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  run-digest:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      RUN_MODE: ${{ github.event.inputs.mode || (github.event.schedule == '0 0 * * 0' && 'send' || 'process') }}
+
+    steps:
+      - name: 下載程式碼
+        uses: actions/checkout@v4.2.2
+
+      - name: 還原資料庫
+        run: |
+          if [ -f db/articles.db ]; then
+            cp db/articles.db articles.db
+            echo "✅ 資料庫已還原"
+          else
+            echo "📭 第一次執行，從空白開始"
+          fi
+          if [ -f db/sitemap_progress.txt ]; then
+            cp db/sitemap_progress.txt sitemap_progress.txt
+          fi
+          if [ -f db/vol_number.txt ]; then
+            cp db/vol_number.txt vol_number.txt
+          fi
+
+      - name: 安裝 Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.11'
+
+      - name: 安裝套件
+        run: pip install -r requirements.txt
+
+      - name: 執行
+        if: env.RUN_MODE != 'pages'
+        run: python main.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          RUN_MODE: ${{ env.RUN_MODE }}
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+
+      - name: 匯出網頁資料
+        run: python export_json.py
+
+      - name: 儲存資料庫
+        run: |
+          mkdir -p db
+          if [ -f articles.db ]; then
+            cp articles.db db/articles.db
+          fi
+          if [ -f sitemap_progress.txt ]; then
+            cp sitemap_progress.txt db/sitemap_progress.txt
+          fi
+          if [ -f vol_number.txt ]; then
+            cp vol_number.txt db/vol_number.txt
+          fi
+          git config user.name "Axis Digest Bot"
+          git config user.email "bot@axis-digest"
+          git add db/ docs/
+          git diff --staged --quiet || git commit -m "更新資料庫與網頁資料"
+          git push
