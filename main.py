@@ -2,7 +2,7 @@ import logging
 import os
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from scraper import AxisScraper
+from scraper import Scraper
 from commentator import Commentator
 from mailer import build_email, send_email
 from pathlib import Path
@@ -41,7 +41,7 @@ def main():
     logger.info("🚀 Axis Digest 開始執行，模式：" + mode)
     logger.info("==================================================")
 
-    scraper = AxisScraper()
+    scraper = Scraper()
     commentator = Commentator()
 
     if mode == "process":
