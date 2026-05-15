@@ -20,7 +20,7 @@ JINA_PREFIX = "https://r.jina.ai/"
 
 SITEMAP_INDEX_URL = "https://www.axismag.jp/sitemap.xml"
 
-MAX_ARTICLES_PER_RUN = 500
+MAX_ARTICLES_PER_RUN = 50
 
 
 class AxisScraper:
