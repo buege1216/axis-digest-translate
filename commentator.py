@@ -60,7 +60,7 @@ class Commentator:
             self.model = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
             logger.info("使用 Gemini，模型：" + self.model)
 
-    def _ask(self, prompt, max_tokens=3000):
+    def _ask(self, prompt, max_tokens=5000):
         self._last_error_is_quota = False
         for attempt in range(3):
             try:
@@ -122,7 +122,7 @@ class Commentator:
         title = article.get("title", "")
         prompt = PROMPT_TEMPLATE.format(title=title, content=content)
 
-        result = self._ask(prompt, max_tokens=2500)
+        result = self._ask(prompt, max_tokens=5000)
         if not result:
             return "", "", ""
 
