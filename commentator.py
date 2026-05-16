@@ -112,7 +112,11 @@ class Commentator:
                 "點出盲點", "金句結尾", "直接輸出",
                 "要點一", "要點二", "要點三",
                 "核心主題：（", "延伸思考：（",
+                "The user wants", "Let me", "I need to",
+                "I will", "I'll", "I should", "Here is",
+                "Here's", "Let's", "This is", "Please note",
             ]):
+
                 continue
             cleaned.append(line)
         return "\n".join(cleaned).strip()
