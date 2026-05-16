@@ -134,7 +134,7 @@ class Commentator:
 
         return summary, commentary, translation
 
-    def process_all(self, batch=450):
+    def process_all(self, batch=50):
         with sqlite3.connect(DB_PATH) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("""
