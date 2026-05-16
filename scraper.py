@@ -232,12 +232,19 @@ class AxisScraper:
         published = (m.group(1) + "-" + m.group(2)) if m else ""
 
         logger.info("  ✓ " + title[:45] + "（" + str(len(content)) + " 字）")
+        
+        # 從內文抓分類
+        category = ""
+        cat_match = re.search(r"axismag\.jp/(?:posts/)?category/([a-z\-]+)", text)
+        if cat_match:
+            category = cat_match.group(1)
+        
         return {
             "url":       url,
             "title":     title,
             "author":    "",
             "published": published,
-            "category":  "",
+            "category":  category,
             "content":   content[:4000],
         }
 
