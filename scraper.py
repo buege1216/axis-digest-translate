@@ -42,6 +42,7 @@ class AxisScraper:
                     summary     TEXT,
                     commentary  TEXT,
                     translation TEXT,
+                    zh_title    TEXT,
                     fetched_at  TEXT NOT NULL,
                     sent        INTEGER DEFAULT 0
                 )
@@ -51,6 +52,7 @@ class AxisScraper:
             for col, definition in [
                 ("category",    "TEXT"),
                 ("translation", "TEXT"),
+                ("zh_title",    "TEXT"),
             ]:
                 if col not in existing:
                     conn.execute("ALTER TABLE articles ADD COLUMN " + col + " " + definition)
