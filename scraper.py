@@ -5,7 +5,7 @@ import time
 import logging
 import re
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -13,13 +13,11 @@ logger = logging.getLogger(__name__)
 
 DB_PATH = Path("articles.db")
 PROGRESS_FILE = Path("sitemap_progress.txt")
-REQUEST_DELAY = 3.0  # Jina AI 有速率限制，稍微慢一點
+REQUEST_DELAY = 3.0
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; AxisDigestBot/1.0)"}
 JINA_PREFIX = "https://r.jina.ai/"
-
 SITEMAP_INDEX_URL = "https://www.axismag.jp/sitemap.xml"
-
 MAX_ARTICLES_PER_RUN = 50
 
 
@@ -47,7 +45,6 @@ class AxisScraper:
                     sent        INTEGER DEFAULT 0
                 )
             """)
-            # 自動補上缺少的欄位（相容舊資料庫）
             existing = [row[1] for row in conn.execute("PRAGMA table_info(articles)")]
             for col, definition in [
                 ("category",    "TEXT"),
@@ -101,7 +98,7 @@ class AxisScraper:
                 logger.info("已儲存：" + article["title"][:50])
             except sqlite3.IntegrityError:
                 pass
-                
+
     def _fetch_all_sitemap_urls(self):
         try:
             resp = requests.get(SITEMAP_INDEX_URL, headers=HEADERS, timeout=20)
@@ -120,11 +117,15 @@ class AxisScraper:
                     urls.append(url)
         except Exception as e:
             logger.error("主 Sitemap 解析失敗：" + str(e))
-        # 按檔名數字從大到小排序（sitemap15 最新，排最前面）
-        urls.sort(key=lambda u: int(re.search(r"sitemap(\d+)", u).group(1)) if re.search(r"sitemap(\d+)", u) else 0, reverse=True)
+
+        urls.sort(
+            key=lambda u: int(re.search(r"sitemap(\d+)", u).group(1))
+            if re.search(r"sitemap(\d+)", u) else 0,
+            reverse=True
+        )
         logger.info("找到 " + str(len(urls)) + " 個 sitemap")
         return urls
-    
+
     def _fetch_sitemap_urls(self, sitemap_url):
         try:
             resp = requests.get(sitemap_url, headers=HEADERS, timeout=20)
@@ -145,12 +146,10 @@ class AxisScraper:
                 url = loc.text.strip()
                 if not re.search(r"/posts/\d{4}/\d{2}/\d+\.html", url):
                     continue
-                # 取 lastmod，轉成台灣時間（UTC+8）
                 published = ""
                 if lastmod is not None and lastmod.text:
                     raw = lastmod.text.strip()
                     try:
-                        from datetime import timezone, timedelta
                         dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
                         tw_tz = timezone(timedelta(hours=8))
                         dt_tw = dt.astimezone(tw_tz)
@@ -160,10 +159,10 @@ class AxisScraper:
                 urls.append((url, published))
         except Exception as e:
             logger.error("Sitemap 解析失敗：" + str(e))
-        # 按 published 從新到舊排序
-            urls.sort(key=lambda x: x[1], reverse=True)
-            return urls
 
+        # 按 published 從新到舊排序
+        urls.sort(key=lambda x: x[1], reverse=True)
+        return urls
 
     def _fetch_article(self, url, published=""):
         jina_url = JINA_PREFIX + url
@@ -192,19 +191,16 @@ class AxisScraper:
             if not stripped:
                 continue
 
-            # 找文章標題（# 開頭，不是網站名稱）
             if stripped.startswith("# ") and not title:
                 candidate = stripped.lstrip("#").strip()
                 if "AXIS WEB" not in candidate and "axismag" not in candidate.lower():
                     title = candidate
                 continue
 
-            # 找到日期行，之後才是內文
             if not article_started and date_pattern.search(stripped):
                 article_started = True
                 continue
 
-            # 內文開始後收集，跳過雜訊
             if article_started:
                 if any(skip in stripped for skip in [
                     "FOLLOW US", "Facebook", "Twitter",
@@ -228,17 +224,17 @@ class AxisScraper:
             return None
 
         # 從網址取年月當發布日期
-        m = re.search(r"/posts/(\d{4})/(\d{2})/", url)
-        published = (m.group(1) + "-" + m.group(2)) if m else ""
+        if not published:
+            m = re.search(r"/posts/(\d{4})/(\d{2})/", url)
+            published = (m.group(1) + "-" + m.group(2)) if m else ""
 
-        logger.info("  ✓ " + title[:45] + "（" + str(len(content)) + " 字）")
-        
         # 從內文抓分類
         category = ""
         cat_match = re.search(r"axismag\.jp/(?:posts/)?category/([a-z\-]+)", text)
         if cat_match:
             category = cat_match.group(1)
-        
+
+        logger.info("  ✓ " + title[:45] + "（" + str(len(content)) + " 字）")
         return {
             "url":       url,
             "title":     title,
@@ -252,7 +248,6 @@ class AxisScraper:
         sitemap_idx, url_idx = self._get_progress()
         logger.info("從 sitemap 進度：第 " + str(sitemap_idx) + " 個，第 " + str(url_idx) + " 筆")
 
-        # 取得所有 sitemap 清單
         all_sitemaps = self._fetch_all_sitemap_urls()
         if not all_sitemaps:
             logger.error("無法取得 sitemap 清單")
@@ -303,13 +298,13 @@ class AxisScraper:
         logger.info("共新增 " + str(len(new_articles)) + " 篇文章")
         return new_articles
 
-    def get_unsent(self, limit=15):
+    def get_unsent(self, limit=1):
         with sqlite3.connect(DB_PATH) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("""
                 SELECT * FROM articles
                 WHERE sent = 0 AND summary IS NOT NULL
-                ORDER BY fetched_at DESC LIMIT ?
+                ORDER BY published DESC LIMIT ?
             """, (limit,)).fetchall()
         return [dict(r) for r in rows]
 
@@ -320,6 +315,7 @@ class AxisScraper:
                 [(i,) for i in ids]
             )
             conn.commit()
+
     def get_unsent_count(self):
         with sqlite3.connect(DB_PATH) as conn:
             row = conn.execute("""
