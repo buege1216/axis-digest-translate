@@ -85,7 +85,8 @@ def export():
             month_articles.append({
                 "id":          a["id"],
                 "url":         a["url"],
-                "title":       a["title"] or "",
+                "title":       a.get("zh_title") or a.get("title") or "",
+                "orig_title":  a.get("title") or "",
                 "published":   a.get("published", ""),
                 "category":    a.get("category", ""),
                 "cat_label":   CATEGORY_MAP.get(a.get("category", ""), a.get("category", "")),
