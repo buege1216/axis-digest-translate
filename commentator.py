@@ -122,17 +122,21 @@ class Commentator:
         title = article.get("title", "")
         prompt = PROMPT_TEMPLATE.format(title=title, content=content)
 
-        result = self._ask(prompt, max_tokens=5000)
+        result = self._ask(prompt, max_tokens=2500)
         if not result:
             return "", "", ""
 
-        translation = self._clean(result)
+        # 解析標題和內文
+        title_match   = re.search(r"===標題===(.*?)===內文===", result, re.DOTALL)
+        content_match = re.search(r"===內文===(.*?)$", result, re.DOTALL)
 
-        # 用翻譯內容當摘要（讓品質檢查通過）
-        summary = "翻譯完成"
-        commentary = ""
+        zh_title   = self._clean(title_match.group(1).strip())   if title_match   else ""
+        zh_content = self._clean(content_match.group(1).strip()) if content_match else ""
 
-        return summary, commentary, translation
+        # 把翻譯標題存進 summary，翻譯內文存進 translation
+        summary = zh_title if zh_title else "翻譯完成"
+        return summary, "", zh_content
+
 
     def process_all(self, batch=50):
         with sqlite3.connect(DB_PATH) as conn:
