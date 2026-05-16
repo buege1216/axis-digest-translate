@@ -54,7 +54,8 @@ def export():
         index.append({
             "id":        a["id"],
             "url":       a["url"],
-            "title":     a["title"] or "",
+            "title":     a.get("zh_title") or a["title"] or "",
+            "orig_title": a["title"] or "",
             "published": pub,
             "ym":        ym,
             "category":  cat,
