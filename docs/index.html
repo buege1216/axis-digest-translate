@@ -3,204 +3,359 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>軸心週報 Dashboard</title>
+<title>軸心閱讀 Axis Reader</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f5f4f0; font-family: Georgia, serif; color: #2c2c2a; }
-.header { background: #1a1a18; padding: 28px 32px; }
-.header h1 { color: #f1efe8; font-size: 24px; font-weight: 400; }
-.header p { color: #888780; font-size: 13px; margin-top: 4px; font-family: Arial, sans-serif; }
-.stats { display: flex; gap: 12px; padding: 20px 32px; flex-wrap: wrap; background: #2c2c2a; }
-.stat { background: #1a1a18; padding: 14px 20px; border-radius: 4px; flex: 1; min-width: 120px; }
-.stat-num { font-size: 28px; font-weight: 400; color: #f1efe8; }
-.stat-label { font-size: 11px; color: #888780; font-family: Arial, sans-serif; margin-top: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
-.controls { padding: 16px 32px; background: #fff; border-bottom: 1px solid #e8e6e0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-.filter-btn { padding: 6px 14px; border: 1px solid #d3d1c7; border-radius: 20px; background: #fff; cursor: pointer; font-size: 13px; font-family: Arial, sans-serif; color: #444; }
-.filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
-.search { padding: 6px 14px; border: 1px solid #d3d1c7; border-radius: 20px; font-size: 13px; font-family: Arial, sans-serif; width: 220px; outline: none; }
-.updated { font-size: 12px; color: #888780; font-family: Arial, sans-serif; margin-left: auto; }
-.list { padding: 16px 32px; max-width: 900px; margin: 0 auto; }
-.article { background: #fff; margin-bottom: 12px; border-radius: 4px; border-left: 3px solid #1a1a18; overflow: hidden; }
-.article.sent { border-left-color: #888780; opacity: 0.7; }
-.article.no-summary { border-left-color: #d3d1c7; }
-.art-header { padding: 16px 20px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; }
-.art-status { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-.art-info { flex: 1; }
-.art-title { font-size: 15px; font-weight: 400; color: #1a1a18; line-height: 1.4; }
-.art-meta { font-size: 12px; color: #888780; font-family: Arial, sans-serif; margin-top: 4px; }
-.art-actions { display: flex; gap: 8px; flex-shrink: 0; }
-.btn { padding: 5px 12px; border-radius: 3px; font-size: 12px; font-family: Arial, sans-serif; cursor: pointer; border: none; }
-.btn-read { background: #1a1a18; color: #fff; }
-.btn-unread { background: #f1efe8; color: #888780; }
-.btn-link { background: transparent; color: #1a1a18; border: 1px solid #d3d1c7; text-decoration: none; display: inline-flex; align-items: center; }
-.art-body { padding: 0 20px 20px; display: none; border-top: 1px solid #f1efe8; }
-.art-body.open { display: block; }
-.section-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #b4b2a9; margin: 16px 0 8px; }
-.section-text { font-size: 14px; line-height: 1.8; color: #444441; white-space: pre-line; }
-.commentary-text { font-size: 14px; line-height: 1.85; color: #2c2c2a; font-style: italic; white-space: pre-line; }
-.badge { display: inline-block; background: #1a1a18; color: #f1efe8; font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 8px; }
-.empty { text-align: center; padding: 48px; color: #888780; font-family: Arial, sans-serif; }
-@media (max-width: 600px) {
-  .stats { padding: 16px; }
-  .list { padding: 12px 16px; }
-  .controls { padding: 12px 16px; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f4f0;font-family:Georgia,serif;color:#2c2c2a;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* Header */
+.hd{background:#1a1a18;padding:24px 32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.hd h1{color:#f1efe8;font-size:22px;font-weight:400;flex:1}
+.hd-stats{font-family:Arial,sans-serif;font-size:12px;color:#888780}
+.search-wrap{display:flex;gap:8px;width:100%}
+.search{flex:1;padding:8px 14px;border:none;border-radius:20px;font-size:14px;outline:none;background:#2c2c2a;color:#f1efe8}
+.search::placeholder{color:#5f5e5a}
+
+/* Nav tabs */
+.tabs{background:#2c2c2a;display:flex;padding:0 32px}
+.tab{padding:12px 20px;font-family:Arial,sans-serif;font-size:13px;color:#888780;cursor:pointer;border-bottom:2px solid transparent}
+.tab.active{color:#f1efe8;border-bottom-color:#f1efe8}
+
+/* Layout */
+.layout{display:flex;min-height:calc(100vh - 140px)}
+
+/* Sidebar */
+.sidebar{width:240px;flex-shrink:0;background:#fff;border-right:1px solid #e8e6e0;overflow-y:auto;max-height:calc(100vh - 140px);position:sticky;top:0}
+.sidebar-section{border-bottom:1px solid #f1efe8}
+.sidebar-header{padding:12px 16px;font-family:Arial,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#b4b2a9;background:#fafaf8}
+.sidebar-item{padding:10px 16px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.sidebar-item:hover{background:#f5f4f0}
+.sidebar-item.active{background:#1a1a18;color:#f1efe8}
+.sidebar-item.active .count{color:#888780}
+.sidebar-sub{padding:6px 16px 6px 28px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between}
+.sidebar-sub:hover{background:#f5f4f0}
+.sidebar-sub.active{color:#1a1a18;font-weight:bold}
+.count{font-family:Arial,sans-serif;font-size:12px;color:#b4b2a9}
+
+/* Article list */
+.content{flex:1;padding:20px 24px;overflow-y:auto}
+.content-header{margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.content-title{font-size:16px;font-weight:400}
+.content-count{font-family:Arial,sans-serif;font-size:13px;color:#888780}
+
+.art-item{background:#fff;margin-bottom:8px;border-radius:2px;border-left:3px solid #1a1a18;cursor:pointer;transition:border-color .2s}
+.art-item:hover{border-left-color:#888780}
+.art-item.read{border-left-color:#d3d1c7;opacity:.7}
+.art-header{padding:14px 18px}
+.art-title{font-size:15px;line-height:1.4;margin-bottom:6px}
+.art-meta{font-family:Arial,sans-serif;font-size:12px;color:#888780;display:flex;gap:12px;flex-wrap:wrap}
+.art-cat{background:#f1efe8;padding:2px 8px;border-radius:10px;font-size:11px;color:#444}
+
+/* Article reader */
+.reader{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:100;overflow-y:auto}
+.reader.open{display:block}
+.reader-hd{background:#1a1a18;padding:16px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
+.reader-back{color:#888780;font-family:Arial,sans-serif;font-size:13px;cursor:pointer;flex-shrink:0}
+.reader-back:hover{color:#f1efe8}
+.reader-title{color:#f1efe8;font-size:15px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reader-link{color:#888780;font-family:Arial,sans-serif;font-size:12px;flex-shrink:0}
+.reader-link:hover{color:#f1efe8}
+.reader-body{max-width:680px;margin:0 auto;padding:32px 24px}
+.reader-meta{font-family:Arial,sans-serif;font-size:13px;color:#888780;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #f1efe8}
+.reader-content{font-size:16px;line-height:1.9;color:#2c2c2a}
+.reader-content img{max-width:100%;height:auto;margin:16px 0;display:block;border-radius:2px}
+.reader-content p{margin-bottom:1em}
+.img-caption{font-size:13px;color:#888780;font-family:Arial,sans-serif;margin:-8px 0 16px}
+
+/* Loading */
+.loading{text-align:center;padding:48px;color:#888780;font-family:Arial,sans-serif}
+
+@media(max-width:600px){
+  .sidebar{width:100%;max-height:200px;position:relative}
+  .layout{flex-direction:column}
+  .hd{padding:16px}
+  .tabs{padding:0 16px}
+  .content{padding:12px}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>軸心週報 Dashboard</h1>
-  <p id="updated">載入中...</p>
+<div class="hd">
+  <h1>軸心閱讀 Axis Reader</h1>
+  <div class="hd-stats" id="hd-stats">載入中...</div>
+  <div class="search-wrap">
+    <input class="search" type="text" placeholder="搜尋文章標題..." oninput="onSearch(this.value)">
+  </div>
 </div>
 
-<div class="stats" id="stats"></div>
-
-<div class="controls">
-  <button class="filter-btn active" onclick="setFilter('all')">全部</button>
-  <button class="filter-btn" onclick="setFilter('pending')">📥 待閱讀</button>
-  <button class="filter-btn" onclick="setFilter('sent')">✅ 已閱讀</button>
-  <button class="filter-btn" onclick="setFilter('no_summary')">⏳ 待摘要</button>
-  <input class="search" type="text" placeholder="搜尋標題..." oninput="setSearch(this.value)">
-  <span class="updated" id="count"></span>
+<div class="tabs">
+  <div class="tab active" onclick="switchView('date')">📅 依日期</div>
+  <div class="tab" onclick="switchView('cat')">🏷️ 依類別</div>
 </div>
 
-<div class="list" id="list"></div>
+<div class="layout">
+  <div class="sidebar" id="sidebar"></div>
+  <div class="content">
+    <div class="content-header">
+      <div class="content-title" id="content-title">請從左側選擇</div>
+      <div class="content-count" id="content-count"></div>
+    </div>
+    <div id="article-list"><div class="loading">← 從左側選擇年份或類別開始閱讀</div></div>
+  </div>
+</div>
+
+<!-- 文章閱讀器 -->
+<div class="reader" id="reader">
+  <div class="reader-hd">
+    <div class="reader-back" onclick="closeReader()">← 返回</div>
+    <div class="reader-title" id="reader-title"></div>
+    <a class="reader-link" id="reader-link" href="#" target="_blank">原文 ↗</a>
+  </div>
+  <div class="reader-body">
+    <div class="reader-meta" id="reader-meta"></div>
+    <div class="reader-content" id="reader-content"></div>
+  </div>
+</div>
 
 <script>
-const REPO = location.hostname.split('.')[0];
-const GH_API = 'https://api.github.com';
-let allArticles = [];
-let currentFilter = 'all';
-let currentSearch = '';
-let ghToken = localStorage.getItem('gh_token') || '';
+let allIndex = [];
+let currentView = 'date';
+let currentKey = '';
+let monthCache = {};
+let searchQuery = '';
+let readSet = new Set(JSON.parse(localStorage.getItem('read') || '[]'));
 
-async function loadData() {
+async function init() {
   try {
-    const resp = await fetch('data.json?t=' + Date.now());
-    const data = await resp.json();
-    allArticles = data.articles || [];
-    renderStats(data.stats, data.updated_at);
-    renderList();
+    const r = await fetch('data/index.json?t=' + Date.now());
+    const data = await r.json();
+    allIndex = data.articles || [];
+    document.getElementById('hd-stats').textContent =
+      '共 ' + data.total + ' 篇已翻譯　·　' + data.updated_at;
+    renderSidebar();
   } catch(e) {
-    document.getElementById('list').innerHTML = '<div class="empty">載入失敗，請稍後再試</div>';
+    document.getElementById('hd-stats').textContent = '載入失敗';
   }
 }
 
-function renderStats(s, updated) {
-  document.getElementById('updated').textContent = '更新時間：' + updated;
-  const notCrawled = Math.max((s.total_site || 0) - (s.total_db || 0), 0);
-  document.getElementById('stats').innerHTML =
-    stat('🌐', notCrawled, '未爬取') +
-    stat('⏳', s.no_summary || 0, '待摘要') +
-    stat('📥', s.pending || 0, '待閱讀') +
-    stat('✅', s.sent || 0, '已閱讀');
+function switchView(v) {
+  currentView = v;
+  currentKey = '';
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === (v==='date'?0:1)));
+  renderSidebar();
+  document.getElementById('article-list').innerHTML = '<div class="loading">← 從左側選擇開始閱讀</div>';
+  document.getElementById('content-title').textContent = '請從左側選擇';
+  document.getElementById('content-count').textContent = '';
 }
 
-function stat(icon, num, label) {
-  return '<div class="stat"><div class="stat-num">' + icon + ' ' + num + '</div><div class="stat-label">' + label + '</div></div>';
+function renderSidebar() {
+  const sb = document.getElementById('sidebar');
+  if (currentView === 'date') {
+    sb.innerHTML = buildDateSidebar();
+  } else {
+    sb.innerHTML = buildCatSidebar();
+  }
 }
 
-function setFilter(f) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['all','pending','sent','no_summary'][i] === f);
+function buildDateSidebar() {
+  // 按年份 → 月份
+  const byYear = {};
+  allIndex.forEach(a => {
+    const ym = a.ym || 'unknown';
+    const y = ym.slice(0, 4);
+    const m = ym.slice(5, 7);
+    if (!byYear[y]) byYear[y] = {};
+    if (!byYear[y][m]) byYear[y][m] = 0;
+    byYear[y][m]++;
   });
-  renderList();
-}
 
-function setSearch(v) {
-  currentSearch = v.toLowerCase();
-  renderList();
-}
-
-function renderList() {
-  let filtered = allArticles.filter(a => {
-    if (currentFilter === 'pending')    return a.summary && !a.sent;
-    if (currentFilter === 'sent')       return a.sent;
-    if (currentFilter === 'no_summary') return !a.summary;
-    return true;
+  const years = Object.keys(byYear).sort((a,b) => b-a);
+  let html = '';
+  years.forEach(y => {
+    const yTotal = Object.values(byYear[y]).reduce((s,n) => s+n, 0);
+    html += '<div class="sidebar-section">';
+    html += '<div class="sidebar-item" onclick="toggleYear(\'' + y + '\')" id="y-' + y + '">';
+    html += '<span>📅 ' + y + ' 年</span><span class="count">' + yTotal + '</span></div>';
+    html += '<div id="ym-' + y + '" style="display:none">';
+    Object.keys(byYear[y]).sort((a,b) => b-a).forEach(m => {
+      const key = y + '-' + m;
+      html += '<div class="sidebar-sub" onclick="selectKey(\'' + key + '\')" id="key-' + key + '">';
+      html += '<span>' + y + '/' + m + '</span><span class="count">' + byYear[y][m] + '</span></div>';
+    });
+    html += '</div></div>';
   });
-  if (currentSearch) {
-    filtered = filtered.filter(a => (a.title || '').toLowerCase().includes(currentSearch));
-  }
-  document.getElementById('count').textContent = filtered.length + ' 篇';
-  if (!filtered.length) {
-    document.getElementById('list').innerHTML = '<div class="empty">沒有符合的文章</div>';
-    return;
-  }
-  document.getElementById('list').innerHTML = filtered.map(articleHTML).join('');
+  return html;
 }
 
-function articleHTML(a) {
-  const icon = a.sent ? '✅' : (a.summary ? '📥' : '⏳');
-  const cls  = a.sent ? 'sent' : (!a.summary ? 'no-summary' : '');
-  const readBtn = a.sent
-    ? '<button class="btn btn-unread" onclick="markRead(' + a.id + ', 0, event)">取消已讀</button>'
-    : (a.summary ? '<button class="btn btn-read" onclick="markRead(' + a.id + ', 1, event)">標記已讀</button>' : '');
+function buildCatSidebar() {
+  const byCat = {};
+  allIndex.forEach(a => {
+    const cat = a.cat_label || '其他';
+    const ym = a.ym || 'unknown';
+    const y = ym.slice(0,4);
+    const m = ym.slice(5,7);
+    if (!byCat[cat]) byCat[cat] = {};
+    if (!byCat[cat][y]) byCat[cat][y] = {};
+    if (!byCat[cat][y][m]) byCat[cat][y][m] = 0;
+    byCat[cat][y][m]++;
+  });
 
-  const body = a.summary ? (
-    '<div class="section-label">編輯摘要</div>' +
-    '<div class="section-text">' + esc(a.summary) + '</div>' +
-    '<div class="section-label" style="margin-top:16px"><span class="badge">軸心評論</span></div>' +
-    '<div class="commentary-text">' + esc(a.commentary) + '</div>' +
-    (a.translation ? '<div class="section-label" style="margin-top:16px">繁體中文全文</div><div class="section-text">' + esc(a.translation) + '</div>' : '')
-  ) : '<div class="section-text" style="color:#b4b2a9;padding-top:16px">摘要尚未生成</div>';
+  const cats = Object.keys(byCat).sort();
+  let html = '';
+  cats.forEach(cat => {
+    const total = Object.values(byCat[cat]).reduce((s,ys) =>
+      s + Object.values(ys).reduce((ss,n) => ss+n, 0), 0);
+    html += '<div class="sidebar-section">';
+    html += '<div class="sidebar-item" onclick="toggleCat(\'' + esc(cat) + '\')" id="c-' + esc(cat) + '">';
+    html += '<span>🏷️ ' + cat + '</span><span class="count">' + total + '</span></div>';
+    html += '<div id="cd-' + esc(cat) + '" style="display:none">';
+    Object.keys(byCat[cat]).sort((a,b) => b-a).forEach(y => {
+      Object.keys(byCat[cat][y]).sort((a,b) => b-a).forEach(m => {
+        const key = 'cat:' + cat + ':' + y + '-' + m;
+        html += '<div class="sidebar-sub" onclick="selectKey(\'' + esc(key) + '\')" id="key-' + esc(key) + '">';
+        html += '<span>' + y + '/' + m + '</span><span class="count">' + byCat[cat][y][m] + '</span></div>';
+      });
+    });
+    html += '</div></div>';
+  });
+  return html;
+}
 
-  return '<div class="article ' + cls + '" id="art-' + a.id + '">' +
-    '<div class="art-header" onclick="toggle(' + a.id + ')">' +
-      '<div class="art-status">' + icon + '</div>' +
-      '<div class="art-info">' +
-        '<div class="art-title">' + esc(a.title || '（無標題）') + '</div>' +
-        '<div class="art-meta">' + (a.published || '') + (a.category ? '　·　' + a.category : '') + '</div>' +
-      '</div>' +
-      '<div class="art-actions" onclick="event.stopPropagation()">' +
-        readBtn +
-        '<a class="btn btn-link" href="' + a.url + '" target="_blank">原文</a>' +
-      '</div>' +
-    '</div>' +
-    '<div class="art-body" id="body-' + a.id + '">' + body + '</div>' +
-  '</div>';
+function toggleYear(y) {
+  const el = document.getElementById('ym-' + y);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleCat(cat) {
+  const el = document.getElementById('cd-' + esc(cat));
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+async function selectKey(key) {
+  currentKey = key;
+  document.querySelectorAll('.sidebar-sub').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('key-' + esc(key));
+  if (el) el.classList.add('active');
+
+  let ym, catFilter;
+  if (key.startsWith('cat:')) {
+    const parts = key.split(':');
+    catFilter = parts[1];
+    ym = parts[2];
+  } else {
+    ym = key;
+  }
+
+  document.getElementById('article-list').innerHTML = '<div class="loading">載入中...</div>';
+
+  let articles;
+  if (monthCache[ym]) {
+    articles = monthCache[ym];
+  } else {
+    try {
+      const r = await fetch('data/' + ym + '.json?t=' + Date.now());
+      articles = await r.json();
+      monthCache[ym] = articles;
+    } catch(e) {
+      document.getElementById('article-list').innerHTML = '<div class="loading">載入失敗</div>';
+      return;
+    }
+  }
+
+  if (catFilter) {
+    articles = articles.filter(a => a.cat_label === catFilter || a.category === catFilter);
+  }
+
+  if (searchQuery) {
+    articles = articles.filter(a => (a.title||'').toLowerCase().includes(searchQuery));
+  }
+
+  const label = catFilter ? catFilter + ' · ' + ym : ym;
+  document.getElementById('content-title').textContent = label;
+  document.getElementById('content-count').textContent = articles.length + ' 篇';
+  document.getElementById('article-list').innerHTML = articles.map(artHTML).join('') || '<div class="loading">沒有文章</div>';
+}
+
+function artHTML(a) {
+  const isRead = readSet.has(a.id);
+  return '<div class="art-item' + (isRead?' read':'') + '" onclick="openReader(' + a.id + ')">' +
+    '<div class="art-header">' +
+    '<div class="art-title">' + esc2(a.title||'（無標題）') + '</div>' +
+    '<div class="art-meta">' +
+    '<span>' + (a.published||'') + '</span>' +
+    (a.cat_label ? '<span class="art-cat">' + a.cat_label + '</span>' : '') +
+    (isRead ? '<span style="color:#b4b2a9">✓ 已讀</span>' : '') +
+    '</div></div></div>';
+}
+
+async function openReader(id) {
+  // 找文章
+  const idx = allIndex.find(a => a.id === id);
+  if (!idx) return;
+
+  const ym = idx.ym;
+  let articles = monthCache[ym];
+  if (!articles) {
+    try {
+      const r = await fetch('data/' + ym + '.json?t=' + Date.now());
+      articles = await r.json();
+      monthCache[ym] = articles;
+    } catch(e) { return; }
+  }
+  const art = articles.find(a => a.id === id);
+  if (!art) return;
+
+  document.getElementById('reader-title').textContent = art.title || '';
+  document.getElementById('reader-link').href = art.url || '#';
+  document.getElementById('reader-meta').textContent =
+    (art.published||'') + (art.cat_label ? '　·　' + art.cat_label : '');
+
+  // 渲染翻譯內文（保留圖片）
+  let content = art.translation || '（翻譯尚未生成）';
+  content = content.replace(/!\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g, function(m, alt, url) {
+    if (url.includes('wp-content/uploads')) {
+      let html = '<img src="' + url + '">';
+      if (alt && !alt.startsWith('Image ') && alt !== 'Image') {
+        html += '<p class="img-caption">' + alt + '</p>';
+      }
+      return html;
+    }
+    return '';
+  });
+  content = content.replace(/!\[[^\]]*\]/g, '');
+  content = content.split('\n').map(l => l.trim() ? '<p>' + l + '</p>' : '').join('');
+
+  document.getElementById('reader-content').innerHTML = content;
+  document.getElementById('reader').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // 標記已讀
+  readSet.add(id);
+  localStorage.setItem('read', JSON.stringify([...readSet]));
+}
+
+function closeReader() {
+  document.getElementById('reader').classList.remove('open');
+  document.body.style.overflow = '';
+  // 重新渲染列表（更新已讀狀態）
+  if (currentKey) selectKey(currentKey);
+}
+
+function onSearch(v) {
+  searchQuery = v.toLowerCase();
+  if (currentKey) selectKey(currentKey);
 }
 
 function esc(s) {
-  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return (s||'').replace(/[^a-zA-Z0-9\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]/g, '_');
+}
+function esc2(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function toggle(id) {
-  const el = document.getElementById('body-' + id);
-  el.classList.toggle('open');
-}
-
-async function markRead(id, val, e) {
-  e.stopPropagation();
-  if (!ghToken) {
-    ghToken = prompt('請輸入 GitHub Personal Access Token（只需輸入一次）：');
-    if (!ghToken) return;
-    localStorage.setItem('gh_token', ghToken);
-  }
-
-  const art = allArticles.find(a => a.id === id);
-  if (!art) return;
-  art.sent = val;
-
-  // 更新本地顯示
-  const el = document.getElementById('art-' + id);
-  if (el) el.outerHTML = articleHTML(art);
-
-  // 觸發 GitHub Actions 更新資料庫
-  try {
-    await fetch(GH_API + '/repos/' + REPO + '/' + REPO.replace(location.hostname.split('.')[0], 'axis-digest') + '/dispatches', {
-      method: 'POST',
-      headers: { 'Authorization': 'token ' + ghToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event_type: 'mark_read', client_payload: { id: id, val: val } })
-    });
-  } catch(e) {
-    console.log('觸發失敗，下次執行時會同步');
-  }
-}
-
-loadData();
+init();
 </script>
 </body>
 </html>
