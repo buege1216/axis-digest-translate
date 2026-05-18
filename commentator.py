@@ -172,7 +172,7 @@ class Commentator:
             commentary_ok = True
 
             if summary_ok and commentary_ok:
-                    with sqlite3.connect(DB_PATH) as conn:
+                with sqlite3.connect(DB_PATH) as conn:
                     conn.execute(
                         "UPDATE articles SET summary=?, commentary=?, translation=?, zh_title=? WHERE id=?",
                         (summary, commentary, translation, summary, art["id"])
