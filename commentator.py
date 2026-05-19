@@ -131,8 +131,8 @@ class Commentator:
             return "", "", ""
 
         # 解析標題和內文
-        title_match   = re.search(r"===標題===(.*?)===內文===", result, re.DOTALL)
-        content_match = re.search(r"===內文===(.*?)$", result, re.DOTALL)
+            title_match   = re.search(r"===標題===(.*?)===內文===", result, re.DOTALL)
+            content_match = re.search(r"===內文===(.*?)$", result, re.DOTALL)
 
         if not title_match:
             logger.warning("  格式異常，找不到===標題===，原始回應前200字：" + result[:200].replace("\n", "｜"))
