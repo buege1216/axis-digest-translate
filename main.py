@@ -78,6 +78,7 @@ def main():
         logger.info("  ② 已爬取待摘要：　" + str(no_summary) + " 篇")
         logger.info("  ③ 待閱讀庫存：　　" + str(pending) + " 篇")
         logger.info("  ④ 已閱讀：　　　　" + str(sent) + " 篇")
+        logger.info("  📝 有中文標題：　　" + str(zh_title_count) + " 篇")
         logger.info("  ─────────────────")
         logger.info("  資料庫合計：　　　" + str(total_db) + " 篇")
         logger.info("═" * 45)
