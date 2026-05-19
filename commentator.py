@@ -134,6 +134,9 @@ class Commentator:
         title_match   = re.search(r"===標題===(.*?)===內文===", result, re.DOTALL)
         content_match = re.search(r"===內文===(.*?)$", result, re.DOTALL)
 
+        if not title_match:
+            logger.warning("  格式異常，找不到===標題===，原始回應前200字：" + result[:200].replace("\n", "｜"))
+
         zh_title   = self._clean(title_match.group(1).strip())   if title_match   else ""
         zh_content = self._clean(content_match.group(1).strip()) if content_match else ""
 
