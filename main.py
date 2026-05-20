@@ -57,7 +57,7 @@ def main():
         import sqlite3
         with sqlite3.connect("articles.db") as conn:
             total_db   = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
-            zh_title_count = _conn.execute("SELECT COUNT(*) FROM articles WHERE zh_title IS NOT NULL AND zh_title != ''").fetchone()[0]
+            zh_title_count = conn.execute("SELECT COUNT(*) FROM articles WHERE zh_title IS NOT NULL AND zh_title != ''").fetchone()[0]
             no_summary = conn.execute("SELECT COUNT(*) FROM articles WHERE summary IS NULL").fetchone()[0]
             pending    = conn.execute("SELECT COUNT(*) FROM articles WHERE summary IS NOT NULL AND sent=0").fetchone()[0]
             sent       = conn.execute("SELECT COUNT(*) FROM articles WHERE sent=1").fetchone()[0]
