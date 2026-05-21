@@ -325,7 +325,10 @@ async function openReader(id) {
     return '';
   });
   content = content.replace(/!\[[^\]]*\]/g, '');
+  // 把 Markdown 連結 [文字](網址) 轉成 HTML <a>
+  content = content.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" style="color:#1a1a18;border-bottom:1px solid #d3d1c7;">$1</a>');
   content = content.split('\n').map(l => l.trim() ? '<p>' + l + '</p>' : '').join('');
+
 
   document.getElementById('reader-content').innerHTML = content;
   document.getElementById('reader').classList.add('open');
