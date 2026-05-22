@@ -228,11 +228,45 @@ class AxisScraper:
             m = re.search(r"/posts/(\d{4})/(\d{2})/", url)
             published = (m.group(1) + "-" + m.group(2)) if m else ""
 
-        # 從內文抓分類
+        # 從「類型 ｜ 分類」格式抓分類
+        # 日文分類名稱對照
+        JP_CAT_MAP = {
+            "プロダクト":   "product",
+            "ビジネス":     "business",
+            "テクノロジー": "technology",
+            "アート":       "art",
+            "グラフィック": "graphic",
+            "工芸":         "craft",
+            "カルチャー":   "culture",
+            "建築":         "architecture",
+            "インテリア":   "interior",
+            "ファッション": "fashion",
+            "ソーシャル":   "social",
+            "フード・食":   "food",
+            "サイエンス":   "science",
+            "サウンド":     "sound",
+        }
+
         category = ""
-        cat_match = re.search(r"axismag\.jp/(?:posts/)?category/([a-z\-]+)", text)
-        if cat_match:
-            category = cat_match.group(1)
+        # 找「NEWS ｜ プロダクト」或「REPORT ｜ 建築 / 展覧会」這種格式
+        cat_line_match = re.search(
+            r"(?:NEWS|REPORT|INTERVIEW|FEATURE|SERIAL|INSIGHT|TALK|INFO)[^\n]*｜[^\n]*",
+            text
+        )
+        if cat_line_match:
+            cat_line = cat_line_match.group(0)
+            for jp, en in JP_CAT_MAP.items():
+                if jp in cat_line:
+                    category = en
+                    break
+
+        # 備用：從 URL 抓 category
+        if not category:
+            cat_url_match = re.search(r"axismag\.jp/(?:posts/)?category/([a-z\-]+)", text)
+            if cat_url_match:
+                # 只取第一個非側邊欄的分類（排除建築排第一的問題）
+                # 改用找到日期附近的 category 連結
+                pass
 
         logger.info("  ✓ " + title[:45] + "（" + str(len(content)) + " 字）")
         return {
