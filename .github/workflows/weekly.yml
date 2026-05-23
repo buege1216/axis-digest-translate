@@ -76,6 +76,9 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
 
+      - name: 清空網頁資料
+        run: rm -rf docs/data && mkdir -p docs/data
+
       - name: 匯出網頁資料
         run: python export_json.py
 
