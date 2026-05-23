@@ -8,51 +8,36 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#f5f4f0;font-family:Georgia,serif;color:#2c2c2a;min-height:100vh}
 a{text-decoration:none;color:inherit}
-
-/* Header */
 .hd{background:#1a1a18;padding:24px 32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .hd h1{color:#f1efe8;font-size:22px;font-weight:400;flex:1}
 .hd-stats{font-family:Arial,sans-serif;font-size:12px;color:#888780}
 .search-wrap{display:flex;gap:8px;width:100%}
 .search{flex:1;padding:8px 14px;border:none;border-radius:20px;font-size:14px;outline:none;background:#2c2c2a;color:#f1efe8}
 .search::placeholder{color:#5f5e5a}
-
-/* Nav tabs */
 .tabs{background:#2c2c2a;display:flex;padding:0 32px}
 .tab{padding:12px 20px;font-family:Arial,sans-serif;font-size:13px;color:#888780;cursor:pointer;border-bottom:2px solid transparent}
 .tab.active{color:#f1efe8;border-bottom-color:#f1efe8}
-
-/* Layout */
 .layout{display:flex;min-height:calc(100vh - 140px)}
-
-/* Sidebar */
 .sidebar{width:240px;flex-shrink:0;background:#fff;border-right:1px solid #e8e6e0;overflow-y:auto;max-height:calc(100vh - 140px);position:sticky;top:0}
 .sidebar-section{border-bottom:1px solid #f1efe8}
-.sidebar-header{padding:12px 16px;font-family:Arial,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#b4b2a9;background:#fafaf8}
-.sidebar-item{padding:10px 16px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.sidebar-item{padding:10px 16px;font-family:Arial,sans-serif;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .sidebar-item:hover{background:#f5f4f0}
 .sidebar-item.active{background:#1a1a18;color:#f1efe8}
-.sidebar-item.active .count{color:#888780}
-.sidebar-sub{padding:6px 16px 6px 28px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between}
+.sidebar-sub{padding:6px 16px 6px 28px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;font-family:Arial,sans-serif}
 .sidebar-sub:hover{background:#f5f4f0}
 .sidebar-sub.active{color:#1a1a18;font-weight:bold}
 .count{font-family:Arial,sans-serif;font-size:12px;color:#b4b2a9}
-
-/* Article list */
 .content{flex:1;padding:20px 24px;overflow-y:auto}
 .content-header{margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
 .content-title{font-size:16px;font-weight:400}
 .content-count{font-family:Arial,sans-serif;font-size:13px;color:#888780}
-
-.art-item{background:#fff;margin-bottom:8px;border-radius:2px;border-left:3px solid #1a1a18;cursor:pointer;transition:border-color .2s}
+.art-item{background:#fff;margin-bottom:8px;border-radius:2px;border-left:3px solid #1a1a18;cursor:pointer}
 .art-item:hover{border-left-color:#888780}
 .art-item.read{border-left-color:#d3d1c7;opacity:.7}
 .art-header{padding:14px 18px}
 .art-title{font-size:15px;line-height:1.4;margin-bottom:6px}
 .art-meta{font-family:Arial,sans-serif;font-size:12px;color:#888780;display:flex;gap:12px;flex-wrap:wrap}
 .art-cat{background:#f1efe8;padding:2px 8px;border-radius:10px;font-size:11px;color:#444}
-
-/* Article reader */
 .reader{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:100;overflow-y:auto}
 .reader.open{display:block}
 .reader-hd{background:#1a1a18;padding:16px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
@@ -62,21 +47,18 @@ a{text-decoration:none;color:inherit}
 .reader-link{color:#888780;font-family:Arial,sans-serif;font-size:12px;flex-shrink:0}
 .reader-link:hover{color:#f1efe8}
 .reader-body{max-width:680px;margin:0 auto;padding:32px 24px}
-.reader-nav{display:flex;justify-content:space-between;align-items:center;padding:24px 0;margin-top:24px;border-top:1px solid #f1efe8;gap:12px}
-.reader-nav-btn{flex:1;padding:12px 16px;border:1px solid #d3d1c7;border-radius:2px;cursor:pointer;background:#fff;font-family:Arial,sans-serif;font-size:13px;color:#1a1a18;text-align:center;max-width:45%}
-.reader-nav-btn:hover{background:#f5f4f0}
-.reader-nav-btn.disabled{color:#b4b2a9;cursor:default;border-color:#f1efe8}
-.reader-nav-label{font-size:11px;color:#888780;margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase}
-.reader-nav-title{font-size:13px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.reader-meta{font-family:Arial,sans-serif;font-size:13px;color:#888780;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #f1efe8}
+.reader-meta{font-family:Arial,sans-serif;font-size:13px;color:#888780;margin-bottom:24px;padding-bottom:16px;border-top:1px solid #f1efe8;padding-top:16px}
 .reader-content{font-size:16px;line-height:1.9;color:#2c2c2a}
 .reader-content img{max-width:100%;height:auto;margin:16px 0;display:block;border-radius:2px}
 .reader-content p{margin-bottom:1em}
 .img-caption{font-size:13px;color:#888780;font-family:Arial,sans-serif;margin:-8px 0 16px}
-
-/* Loading */
+.reader-nav{display:flex;justify-content:space-between;align-items:stretch;padding:24px 0;margin-top:32px;border-top:1px solid #f1efe8;gap:12px}
+.reader-nav-btn{flex:1;padding:12px 16px;border:1px solid #d3d1c7;border-radius:2px;cursor:pointer;background:#fff;font-family:Arial,sans-serif;font-size:13px;color:#1a1a18;max-width:48%}
+.reader-nav-btn:hover{background:#f5f4f0}
+.reader-nav-btn.disabled{color:#b4b2a9;cursor:default;border-color:#f1efe8;background:#fafaf8}
+.reader-nav-label{font-size:11px;color:#888780;margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase}
+.reader-nav-title{font-size:13px;line-height:1.4}
 .loading{text-align:center;padding:48px;color:#888780;font-family:Arial,sans-serif}
-
 @media(max-width:600px){
   .sidebar{width:100%;max-height:200px;position:relative}
   .layout{flex-direction:column}
@@ -112,7 +94,6 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<!-- 文章閱讀器 -->
 <div class="reader" id="reader">
   <div class="reader-hd">
     <div class="reader-back" onclick="closeReader()">← 返回</div>
@@ -132,7 +113,8 @@ let currentKey = '';
 let monthCache = {};
 let searchQuery = '';
 let readSet = new Set(JSON.parse(localStorage.getItem('read') || '[]'));
-let currentCatFilter = '';  // 記錄目前用哪個類別瀏覽
+let currentList = [];   // 目前瀏覽的文章清單（用於上下篇）
+let currentCatFilter = '';
 
 async function init() {
   try {
@@ -150,6 +132,8 @@ async function init() {
 function switchView(v) {
   currentView = v;
   currentKey = '';
+  currentList = [];
+  currentCatFilter = '';
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === (v==='date'?0:1)));
   renderSidebar();
   document.getElementById('article-list').innerHTML = '<div class="loading">← 從左側選擇開始閱讀</div>';
@@ -158,16 +142,11 @@ function switchView(v) {
 }
 
 function renderSidebar() {
-  const sb = document.getElementById('sidebar');
-  if (currentView === 'date') {
-    sb.innerHTML = buildDateSidebar();
-  } else {
-    sb.innerHTML = buildCatSidebar();
-  }
+  document.getElementById('sidebar').innerHTML =
+    currentView === 'date' ? buildDateSidebar() : buildCatSidebar();
 }
 
 function buildDateSidebar() {
-  // 按年份 → 月份
   const byYear = {};
   allIndex.forEach(a => {
     const ym = a.ym || 'unknown';
@@ -177,18 +156,17 @@ function buildDateSidebar() {
     if (!byYear[y][m]) byYear[y][m] = 0;
     byYear[y][m]++;
   });
-
   const years = Object.keys(byYear).sort((a,b) => b-a);
   let html = '';
   years.forEach(y => {
     const yTotal = Object.values(byYear[y]).reduce((s,n) => s+n, 0);
     html += '<div class="sidebar-section">';
-    html += '<div class="sidebar-item" onclick="toggleYear(\'' + y + '\')" id="y-' + y + '">';
+    html += '<div class="sidebar-item" onclick="toggleEl(\'y-' + y + '\')">';
     html += '<span>📅 ' + y + ' 年</span><span class="count">' + yTotal + '</span></div>';
-    html += '<div id="ym-' + y + '" style="display:none">';
+    html += '<div id="y-' + y + '" style="display:none">';
     Object.keys(byYear[y]).sort((a,b) => b-a).forEach(m => {
       const key = y + '-' + m;
-      html += '<div class="sidebar-sub" onclick="selectKey(\'' + key + '\')" id="key-' + key + '">';
+      html += '<div class="sidebar-sub" onclick="selectDateKey(\'' + key + '\')" id="dk-' + key + '">';
       html += '<span>' + y + '/' + m + '</span><span class="count">' + byYear[y][m] + '</span></div>';
     });
     html += '</div></div>';
@@ -200,32 +178,27 @@ function buildCatSidebar() {
   const byCat = {};
   allIndex.forEach(a => {
     const cat = a.cat_label || '其他';
-    const ym = a.ym || 'unknown';
-    const y = ym.slice(0,4);
-    const m = ym.slice(5,7);
+    const ym = (a.ym && a.ym !== 'unknown') ? a.ym : null;
     if (!byCat[cat]) byCat[cat] = {};
-    if (!byCat[cat][y]) byCat[cat][y] = {};
-    if (!byCat[cat][y][m]) byCat[cat][y][m] = 0;
-    byCat[cat][y][m]++;
+    const key = ym || 'unknown';
+    if (!byCat[cat][key]) byCat[cat][key] = 0;
+    byCat[cat][key]++;
   });
 
   const cats = Object.keys(byCat).sort();
   let html = '';
-  cats.forEach(cat => {
-    const catId = 'cat_' + cats.indexOf(cat);
-    const total = Object.values(byCat[cat]).reduce((s,ys) =>
-      s + Object.values(ys).reduce((ss,n) => ss+n, 0), 0);
+  cats.forEach((cat, idx) => {
+    const catId = 'ci-' + idx;
+    const total = Object.values(byCat[cat]).reduce((s,n) => s+n, 0);
     html += '<div class="sidebar-section">';
     html += '<div class="sidebar-item" onclick="toggleEl(\'' + catId + '\')">';
-    html += '<span>🏷️ ' + cat + '</span><span class="count">' + total + '</span></div>';
+    html += '<span>🏷️ ' + esc2(cat) + '</span><span class="count">' + total + '</span></div>';
     html += '<div id="' + catId + '" style="display:none">';
-    Object.keys(byCat[cat]).sort((a,b) => b-a).forEach(y => {
-      Object.keys(byCat[cat][y]).sort((a,b) => b-a).forEach(m => {
-        const ym = y + '-' + m;
-        const key = 'cat|' + cat + '|' + ym;
-        html += '<div class="sidebar-sub" onclick="selectKey(\'' + key.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')">';
-        html += '<span>' + y + '/' + m + '</span><span class="count">' + byCat[cat][y][m] + '</span></div>';
-      });
+    Object.keys(byCat[cat]).sort((a,b) => b > a ? -1 : 1).forEach(ym => {
+      const safeKey = 'cat|' + idx + '|' + ym;
+      html += '<div class="sidebar-sub" onclick="selectCatKey(' + idx + ',\'' + ym + '\')">';
+      html += '<span>' + (ym === 'unknown' ? '日期不明' : ym) + '</span>';
+      html += '<span class="count">' + byCat[cat][ym] + '</span></div>';
     });
     html += '</div></div>';
   });
@@ -236,62 +209,68 @@ function toggleEl(id) {
   const el = document.getElementById(id);
   if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-  
-function toggleYear(y) {
-  const el = document.getElementById('ym-' + y);
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
 
-function toggleCat(cat) {
-  const el = document.getElementById('cd-' + esc(cat));
-  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-async function selectKey(key) {
-  currentKey = key;
+async function selectDateKey(ym) {
+  currentKey = ym;
+  currentCatFilter = '';
   document.querySelectorAll('.sidebar-sub').forEach(el => el.classList.remove('active'));
-  const el = document.getElementById('key-' + esc(key));
+  const el = document.getElementById('dk-' + ym);
   if (el) el.classList.add('active');
-
-  let ym, catFilter;
-  if (key.startsWith('cat|')) {
-    const parts = key.split('|');
-    catFilter = parts[1];
-    ym = parts[2];
-  } else {
-    ym = key;
-    catFilter = '';
-  }
-  currentCatFilter = catFilter;
 
   document.getElementById('article-list').innerHTML = '<div class="loading">載入中...</div>';
 
-  let articles;
-  if (monthCache[ym]) {
-    articles = monthCache[ym];
+  const articles = await loadMonth(ym);
+  if (!articles) return;
+
+  let filtered = articles;
+  if (searchQuery) filtered = filtered.filter(a => (a.title||'').toLowerCase().includes(searchQuery));
+
+  currentList = filtered;
+  document.getElementById('content-title').textContent = ym;
+  document.getElementById('content-count').textContent = filtered.length + ' 篇';
+  document.getElementById('article-list').innerHTML = filtered.map(artHTML).join('') || '<div class="loading">沒有文章</div>';
+}
+
+async function selectCatKey(catIdx, ym) {
+  currentCatFilter = catIdx;
+  currentKey = 'cat|' + catIdx + '|' + ym;
+
+  document.getElementById('article-list').innerHTML = '<div class="loading">載入中...</div>';
+
+  // 取得該類別的名稱
+  const cats = [...new Set(allIndex.map(a => a.cat_label || '其他'))].sort();
+  const catName = cats[catIdx] || '其他';
+
+  // 載入該月份
+  let articles = [];
+  if (ym !== 'unknown') {
+    const loaded = await loadMonth(ym);
+    if (loaded) articles = loaded.filter(a => (a.cat_label || '其他') === catName);
   } else {
-    try {
-      const r = await fetch('data/' + ym + '.json?t=' + Date.now());
-      articles = await r.json();
-      monthCache[ym] = articles;
-    } catch(e) {
-      document.getElementById('article-list').innerHTML = '<div class="loading">載入失敗</div>';
-      return;
-    }
+    // 日期不明：從 index 找出屬於這個類別且 ym 是 unknown 的
+    articles = allIndex.filter(a => (a.cat_label || '其他') === catName && (!a.ym || a.ym === 'unknown'));
   }
 
-  if (catFilter) {
-    articles = articles.filter(a => a.cat_label === catFilter || a.category === catFilter);
-  }
+  if (searchQuery) articles = articles.filter(a => (a.title||'').toLowerCase().includes(searchQuery));
 
-  if (searchQuery) {
-    articles = articles.filter(a => (a.title||'').toLowerCase().includes(searchQuery));
-  }
-
-  const label = catFilter ? catFilter + ' · ' + ym : ym;
-  document.getElementById('content-title').textContent = label;
+  currentList = articles;
+  document.getElementById('content-title').textContent = catName + ' · ' + (ym === 'unknown' ? '日期不明' : ym);
   document.getElementById('content-count').textContent = articles.length + ' 篇';
   document.getElementById('article-list').innerHTML = articles.map(artHTML).join('') || '<div class="loading">沒有文章</div>';
+}
+
+async function loadMonth(ym) {
+  if (monthCache[ym]) return monthCache[ym];
+  try {
+    const r = await fetch('data/' + ym + '.json?t=' + Date.now());
+    if (!r.ok) throw new Error('not found');
+    const data = await r.json();
+    monthCache[ym] = data;
+    return data;
+  } catch(e) {
+    document.getElementById('article-list').innerHTML = '<div class="loading">載入失敗</div>';
+    return null;
+  }
 }
 
 function artHTML(a) {
@@ -301,99 +280,88 @@ function artHTML(a) {
     '<div class="art-title">' + esc2(a.title||'（無標題）') + '</div>' +
     '<div class="art-meta">' +
     '<span>' + (a.published||'') + '</span>' +
-    (a.cat_label ? '<span class="art-cat">' + a.cat_label + '</span>' : '') +
+    (a.cat_label ? '<span class="art-cat">' + esc2(a.cat_label) + '</span>' : '') +
     (isRead ? '<span style="color:#b4b2a9">✓ 已讀</span>' : '') +
     '</div></div></div>';
 }
 
 async function openReader(id) {
-  // 找文章
   const idx = allIndex.find(a => a.id === id);
   if (!idx) return;
-
   const ym = idx.ym;
-  let articles = monthCache[ym];
-  if (!articles) {
-    try {
-      const r = await fetch('data/' + ym + '.json?t=' + Date.now());
-      articles = await r.json();
-      monthCache[ym] = articles;
-    } catch(e) { return; }
+
+  let art = null;
+  if (ym && ym !== 'unknown') {
+    const articles = await loadMonth(ym);
+    if (articles) art = articles.find(a => a.id === id);
   }
-  const art = articles.find(a => a.id === id);
-  if (!art) return;
+  if (!art) art = idx;
 
   document.getElementById('reader-title').textContent = art.title || '';
   document.getElementById('reader-link').href = art.url || '#';
   document.getElementById('reader-meta').textContent =
     (art.published||'') + (art.cat_label ? '　·　' + art.cat_label : '');
 
-  // 渲染翻譯內文（保留圖片）
   let content = art.translation || '（翻譯尚未生成）';
+  content = content.replace(/\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g,
+    '<a href="$2" target="_blank" style="color:#1a1a18;border-bottom:1px solid #d3d1c7;">$1</a>');
   content = content.replace(/!\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g, function(m, alt, url) {
     if (url.includes('wp-content/uploads')) {
-      let html = '<img src="' + url + '">';
+      let h = '<img src="' + url + '">';
       if (alt && !alt.startsWith('Image ') && alt !== 'Image') {
-        html += '<p class="img-caption">' + alt + '</p>';
+        h += '<p class="img-caption">' + esc2(alt) + '</p>';
       }
-      return html;
+      return h;
     }
     return '';
   });
   content = content.replace(/!\[[^\]]*\]/g, '');
-  // 把 Markdown 連結 [文字](網址) 轉成 HTML <a>
-  content = content.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" style="color:#1a1a18;border-bottom:1px solid #d3d1c7;">$1</a>');
   content = content.split('\n').map(l => l.trim() ? '<p>' + l + '</p>' : '').join('');
 
+  // 上下篇
+  const pos = currentList.findIndex(a => a.id === id);
+  const prevArt = pos > 0 ? currentList[pos - 1] : null;
+  const nextArt = pos < currentList.length - 1 ? currentList[pos + 1] : null;
 
-  document.getElementById('reader-content').innerHTML = content;
+  const navBtn = (a, dir) => a
+    ? '<div class="reader-nav-btn" onclick="openReader(' + a.id + ')" style="' + (dir==='next'?'text-align:right':'') + '">' +
+      '<div class="reader-nav-label">' + (dir==='prev'?'← 上一篇':'下一篇 →') + '</div>' +
+      '<div class="reader-nav-title">' + esc2(a.title||'') + '</div></div>'
+    : '<div class="reader-nav-btn disabled" style="' + (dir==='next'?'text-align:right':'') + '">' +
+      '<div class="reader-nav-label">' + (dir==='prev'?'← 上一篇':'下一篇 →') + '</div>' +
+      '<div class="reader-nav-title">' + (dir==='prev'?'已是第一篇':'已是最後一篇') + '</div></div>';
+
+  document.getElementById('reader-content').innerHTML =
+    content + '<div class="reader-nav">' + navBtn(prevArt,'prev') + navBtn(nextArt,'next') + '</div>';
+
   document.getElementById('reader').classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // 建立上下篇導覽
-  const currentList = monthCache[ym] ? monthCache[ym].filter(a => {
-    if (!currentCatFilter) return true;
-    return a.cat_label === currentCatFilter || a.category === currentCatFilter;
-  }) : [];
-  const currentPos = currentList.findIndex(a => a.id === id);
-  const prevArt = currentPos > 0 ? currentList[currentPos - 1] : null;
-  const nextArt = currentPos < currentList.length - 1 ? currentList[currentPos + 1] : null;
-
-  const navHtml =
-    '<div class="reader-nav">' +
-    (prevArt ?
-      '<div class="reader-nav-btn" onclick="openReader(' + prevArt.id + ')">' +
-      '<div class="reader-nav-label">← 上一篇</div>' +
-      '<div class="reader-nav-title">' + esc2(prevArt.title) + '</div></div>'
-      : '<div class="reader-nav-btn disabled"><div class="reader-nav-label">← 上一篇</div><div class="reader-nav-title">已是第一篇</div></div>') +
-    (nextArt ?
-      '<div class="reader-nav-btn" style="text-align:right" onclick="openReader(' + nextArt.id + ')">' +
-      '<div class="reader-nav-label">下一篇 →</div>' +
-      '<div class="reader-nav-title">' + esc2(nextArt.title) + '</div></div>'
-      : '<div class="reader-nav-btn disabled" style="text-align:right"><div class="reader-nav-label">下一篇 →</div><div class="reader-nav-title">已是最後一篇</div></div>') +
-    '</div>';
-
-  document.getElementById('reader-content').innerHTML += navHtml;
-  // 標記已讀
   readSet.add(id);
   localStorage.setItem('read', JSON.stringify([...readSet]));
+  if (document.getElementById('article-list').innerHTML) {
+    document.getElementById('article-list').innerHTML =
+      currentList.map(artHTML).join('');
+  }
 }
 
 function closeReader() {
   document.getElementById('reader').classList.remove('open');
   document.body.style.overflow = '';
-  // 重新渲染列表（更新已讀狀態）
-  if (currentKey) selectKey(currentKey);
 }
 
 function onSearch(v) {
   searchQuery = v.toLowerCase();
-  if (currentKey) selectKey(currentKey);
+  if (currentKey) {
+    if (currentKey.startsWith('cat|')) {
+      const parts = currentKey.split('|');
+      selectCatKey(parseInt(parts[1]), parts[2]);
+    } else {
+      selectDateKey(currentKey);
+    }
+  }
 }
 
-function esc(s) {
-  return (s||'').replace(/[^a-zA-Z0-9\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]/g, '_');
-}
 function esc2(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
