@@ -241,9 +241,10 @@ async function selectKey(key) {
 
   let ym, catFilter;
   if (key.startsWith('cat:')) {
-    const parts = key.split(':');
-    catFilter = parts[1];
-    ym = parts[2];
+    // cat: 之後找最後一個 : 前是類別，後是年月
+    const firstColon = key.indexOf(':', 4);
+    catFilter = key.substring(4, firstColon);
+    ym = key.substring(firstColon + 1);
   } else {
     ym = key;
   }
