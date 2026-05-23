@@ -205,17 +205,18 @@ function buildCatSidebar() {
   const cats = Object.keys(byCat).sort();
   let html = '';
   cats.forEach(cat => {
+    const catId = 'cat_' + cats.indexOf(cat);
     const total = Object.values(byCat[cat]).reduce((s,ys) =>
       s + Object.values(ys).reduce((ss,n) => ss+n, 0), 0);
     html += '<div class="sidebar-section">';
-    html += '<div class="sidebar-item" onclick="toggleCat(\'' + esc(cat) + '\')" id="c-' + esc(cat) + '">';
+    html += '<div class="sidebar-item" onclick="toggleEl(\'' + catId + '\')">';
     html += '<span>🏷️ ' + cat + '</span><span class="count">' + total + '</span></div>';
-    html += '<div id="cd-' + esc(cat) + '" style="display:none">';
+    html += '<div id="' + catId + '" style="display:none">';
     Object.keys(byCat[cat]).sort((a,b) => b-a).forEach(y => {
       Object.keys(byCat[cat][y]).sort((a,b) => b-a).forEach(m => {
-        const key = 'cat:' + cat + ':' + y + '-' + m;
-        html += '<div class="sidebar-sub" onclick="selectKey(\'' + key.replace(/'/g, "\\'") + '\')" id="key-' + esc(key) + '">';
-        html += '<div class="sidebar-sub" onclick="selectKey(\'' + esc(key) + '\')" id="key-' + esc(key) + '">';
+        const ym = y + '-' + m;
+        const key = 'cat|' + cat + '|' + ym;
+        html += '<div class="sidebar-sub" onclick="selectKey(\'' + key.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')">';
         html += '<span>' + y + '/' + m + '</span><span class="count">' + byCat[cat][y][m] + '</span></div>';
       });
     });
@@ -224,6 +225,11 @@ function buildCatSidebar() {
   return html;
 }
 
+function toggleEl(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+  
 function toggleYear(y) {
   const el = document.getElementById('ym-' + y);
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
@@ -241,11 +247,10 @@ async function selectKey(key) {
   if (el) el.classList.add('active');
 
   let ym, catFilter;
-  if (key.startsWith('cat:')) {
-    // cat: 之後找最後一個 : 前是類別，後是年月
-    const firstColon = key.indexOf(':', 4);
-    catFilter = key.substring(4, firstColon);
-    ym = key.substring(firstColon + 1);
+  if (key.startsWith('cat|')) {
+    const parts = key.split('|');
+    catFilter = parts[1];
+    ym = parts[2];
   } else {
     ym = key;
   }
