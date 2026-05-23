@@ -214,6 +214,7 @@ function buildCatSidebar() {
     Object.keys(byCat[cat]).sort((a,b) => b-a).forEach(y => {
       Object.keys(byCat[cat][y]).sort((a,b) => b-a).forEach(m => {
         const key = 'cat:' + cat + ':' + y + '-' + m;
+        html += '<div class="sidebar-sub" onclick="selectKey(\'' + key.replace(/'/g, "\\'") + '\')" id="key-' + esc(key) + '">';
         html += '<div class="sidebar-sub" onclick="selectKey(\'' + esc(key) + '\')" id="key-' + esc(key) + '">';
         html += '<span>' + y + '/' + m + '</span><span class="count">' + byCat[cat][y][m] + '</span></div>';
       });
