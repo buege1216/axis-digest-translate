@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      RUN_MODE: ${{ github.event.inputs.mode || (github.event.schedule == '0 22 * * *' && 'send' || 'process') }}
+      RUN_MODE: ${{ github.event.inputs.mode || (github.event.schedule == '0 0 * * *' && 'send' || 'process') }}
 
     steps:
       - name: 下載程式碼
