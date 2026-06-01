@@ -194,7 +194,7 @@ function buildCatSidebar() {
     html += '<div class="sidebar-item" onclick="toggleEl(\'' + catId + '\')">';
     html += '<span>🏷️ ' + esc2(cat) + '</span><span class="count">' + total + '</span></div>';
     html += '<div id="' + catId + '" style="display:none">';
-    Object.keys(byCat[cat]).sort((a,b) => b > a ? -1 : 1).forEach(ym => {
+    Object.keys(byCat[cat]).sort((a,b) => b > a ? 1 : -1).forEach(ym => {
       const safeKey = 'cat|' + idx + '|' + ym;
       html += '<div class="sidebar-sub" onclick="selectCatKey(' + idx + ',\'' + ym + '\')">';
       html += '<span>' + (ym === 'unknown' ? '日期不明' : ym) + '</span>';
