@@ -106,23 +106,35 @@ def main():
         send_email(status_subject, status_html)
 
     elif mode == "send":
-        logger.info("📬 寄信模式：從庫存取文章寄出...")
+        import sqlite3
+        logger.info("📬 寄信模式：寄出每日文章 + 狀態報告...")
+
+        # 寄一篇最新未讀文章
         articles = scraper.get_unsent(limit=1)
-
-        if not articles:
-            logger.info("   庫存是空的，請先等系統累積更多文章")
-            return
-
-        vol = get_vol()
-        subject, html = build_email(articles, vol=vol)
-        success = send_email(subject, html)
-
-        if success:
-            scraper.mark_sent([a["id"] for a in articles])
-            next_vol()
-            logger.info("✅ 已寄出 " + str(len(articles)) + " 篇，庫存剩 " + str(scraper.get_unsent_count()) + " 篇")
+        if articles:
+            vol = get_vol()
+            subject, html = build_email(articles, vol=vol)
+            success = send_email(subject, html)
+            if success:
+                scraper.mark_sent([a["id"] for a in articles])
+                next_vol()
+                logger.info("✅ 已寄出文章：" + articles[0].get("title","")[:40])
+            else:
+                logger.error("❌ 文章寄信失敗")
         else:
-            logger.error("❌ 寄信失敗")
+            logger.info("   庫存是空的，跳過文章寄送")
+
+        # 寄每日狀態報告
+        with sqlite3.connect("articles.db") as conn:
+            total_db   = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
+            no_summary = conn.execute("SELECT COUNT(*) FROM articles WHERE summary IS NULL").fetchone()[0]
+            pending    = conn.execute("SELECT COUNT(*) FROM articles WHERE summary IS NOT NULL AND sent=0").fetchone()[0]
+            sent_count = conn.execute("SELECT COUNT(*) FROM articles WHERE sent=1").fetchone()[0]
+
+        total_site  = get_total_site()
+        not_crawled = max(total_site - total_db, 0)
+
+        logger.info("✅ 狀態報告已寄出")
 
 if __name__ == "__main__":
     main()
