@@ -94,6 +94,9 @@ jobs:
           git config user.email "bot@axis-digest"
           git add db/ docs/
           git diff --staged --quiet || git commit -m "更新資料庫與網頁資料"
-          git pull --rebase origin main
-          git push
+          git fetch origin main
+          git checkout origin/main -- db/articles.db 2>/dev/null || true
+          git add db/ docs/
+          git diff --staged --quiet || git commit -m "更新資料庫與網頁資料"
+          git push origin main --force-with-lease
 
