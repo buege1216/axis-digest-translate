@@ -2,7 +2,7 @@ name: 軸心週報 Axis Digest Translate
 
 on:
   schedule:
-    - cron: '0 0 * * *'     # 台北 08:00
+    - cron: '0 0 * * *'     # 台北 08:00（第一次，會寄信和報告）
     - cron: '0 3 * * *'     # 台北 11:00
     - cron: '0 6 * * *'     # 台北 14:00
     - cron: '0 9 * * *'     # 台北 17:00
@@ -10,7 +10,6 @@ on:
     - cron: '0 15 * * *'    # 台北 23:00
     - cron: '0 18 * * *'    # 台北 02:00
     - cron: '0 21 * * *'    # 台北 05:00
-    - cron: '0 22 * * 0'     # 每週日 06:00 自動寄信
 
   workflow_dispatch:
     inputs:
