@@ -237,19 +237,38 @@ async function selectCatKey(catIdx, ym) {
 
   document.getElementById('article-list').innerHTML = '<div class="loading">載入中...</div>';
 
-  // 取得該類別的名稱
   const cats = [...new Set(allIndex.map(a => a.cat_label || '其他'))].sort();
   const catName = cats[catIdx] || '其他';
 
-  // 載入該月份
-  let articles = [];
-  if (ym !== 'unknown') {
-    const loaded = await loadMonth(ym);
-    if (loaded) articles = loaded.filter(a => (a.cat_label || '其他') === catName);
-  } else {
-    // 日期不明：從 index 找出屬於這個類別且 ym 是 unknown 的
-    articles = allIndex.filter(a => (a.cat_label || '其他') === catName && (!a.ym || a.ym === 'unknown'));
+  // 載入該類別所有月份的文章（跨月份）
+  const allYms = [...new Set(
+    allIndex
+      .filter(a => (a.cat_label || '其他') === catName && a.ym && a.ym !== 'unknown')
+      .map(a => a.ym)
+  )].sort((a,b) => b > a ? 1 : -1);
+
+  let allArticles = [];
+  for (const y of allYms) {
+    const loaded = await loadMonth(y);
+    if (loaded) {
+      const filtered = loaded.filter(a => (a.cat_label || '其他') === catName);
+      allArticles = allArticles.concat(filtered);
+    }
   }
+
+  // 加入日期不明的
+  const unknowns = allIndex.filter(a =>
+    (a.cat_label || '其他') === catName && (!a.ym || a.ym === 'unknown')
+  );
+  allArticles = allArticles.concat(unknowns);
+
+  if (searchQuery) allArticles = allArticles.filter(a => (a.title||'').toLowerCase().includes(searchQuery));
+
+  currentList = allArticles;
+  document.getElementById('content-title').textContent = catName;
+  document.getElementById('content-count').textContent = allArticles.length + ' 篇';
+  document.getElementById('article-list').innerHTML = allArticles.map(artHTML).join('') || '<div class="loading">沒有文章</div>';
+}
 
   if (searchQuery) articles = articles.filter(a => (a.title||'').toLowerCase().includes(searchQuery));
 
