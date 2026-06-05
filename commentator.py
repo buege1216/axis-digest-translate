@@ -150,7 +150,7 @@ class Commentator:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("""
                 SELECT id, title, content FROM articles
-                WHERE summary IS NULL AND content != ''
+                WHERE (summary IS NULL OR summary = '') AND content != ''
                 ORDER BY published DESC LIMIT ?
             """, (batch,)).fetchall()
 
